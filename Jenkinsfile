@@ -2,7 +2,7 @@ imageTag="test"
 pipeline {
   environment {
       Namespace = "default"
-      ImageName = "saifrahm/flask-app"
+      ImageName = "saifrahm/hello-plain"
       Creds = "615cfb48-e44f-4b51-85ca-5c6a8ab22b8e"
   }
   agent any
@@ -28,14 +28,14 @@ pipeline {
       // Canary branch
       when { branch 'canary' }
       steps {
-         sh "/usr/local/bin/helm --kubeconfig /var/cluster150/admin.conf upgrade can-app /var/demochart --set canaryImage.tag=${imageTag} -set canaryIngress.enabled=true  --install --namespace ${Namespace} --wait"
+         sh "/usr/local/bin/helm --kubeconfig /var/cluster150/admin.conf upgrade can-app /var/demochart --set canaryImage.tag=${imageTag} --set canaryIngress.enabled=true  --install --namespace ${Namespace} --wait"
         }
       }
     stage('Deploy Production') {
       // Production branch
       when { branch 'master' }
       steps{
-        sh "/usr/local/bin/helm --kubeconfig /var/cluster150/admin.conf upgrade can-app /var/demochart --set image.tag=${imageTag} -set canaryIngress.enabled=false --install --namespace ${Namespace} --wait"
+        sh "/usr/local/bin/helm --kubeconfig /var/cluster150/admin.conf upgrade can-app /var/demochart --set image.tag=${imageTag} --set canaryIngress.enabled=false --install --namespace ${Namespace} --wait"
       }
     }
     }
