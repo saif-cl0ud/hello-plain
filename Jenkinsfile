@@ -14,7 +14,7 @@ pipeline {
          script {
              imageTag= readFile('.git/commit-id').trim()
       }
-        sh "curl -s -S 'https://registry.hub.docker.com/v2/repositories/saifrahm/hello-plain/tags/' | jq '.\"results\"[0][\"name\"]' > .git/last"
+        sh "curl -s -S 'https://registry.hub.docker.com/v2/repositories/saifrahm/hello-plain/tags/' | jq '.results | sort_by(.id) | .[-1].name' > .git/last"
         script {
              tag2= readFile('.git/last').trim()
       }
