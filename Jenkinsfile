@@ -14,6 +14,11 @@ pipeline {
          script {
              imageTag= readFile('.git/commit-id').trim()
       }
+         sh "git rev-parse --short master > .git/lastc"
+         script {
+             tag2= readFile('.git/lastc').trim()
+      }
+         sh "echo ${tag2}
      }
     }
     stage('Build and push image with Container Builder') {
@@ -28,7 +33,7 @@ pipeline {
       // Canary branch
       when { branch 'canary' }
       steps {
-         sh "/usr/local/bin/helm --kubeconfig /var/cluster150/admin.conf upgrade can-app /var/demochart-canary --set canaryImage.tag=${imageTag} --set canaryIngress.enabled=true  --install --namespace ${Namespace} --wait"
+         sh "/usr/local/bin/helm --kubeconfig /var/cluster150/admin.conf upgrade can-app /var/demochart-canary --set image.tag=${tag2}  --set canaryImage.tag=${imageTag} --set canaryIngress.enabled=true  --install --namespace ${Namespace} --wait"
         }
       }
     stage('Deploy Production') {
