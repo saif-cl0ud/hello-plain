@@ -18,7 +18,7 @@ pipeline {
          script {
              tag2= readFile('.git/lastc').trim()
       }
-         sh "echo ${tag2}
+         sh "echo ${tag2}"
      }
     }
     stage('Build and push image with Container Builder') {
