@@ -14,11 +14,11 @@ pipeline {
          script {
              imageTag= readFile('.git/commit-id').trim()
       }
-         sh "git rev-parse --short master > .git/lastc"
-         script {
-             tag2= readFile('.git/lastc').trim()
+        sh "curl -s -S 'https://registry.hub.docker.com/v2/repositories/saifrahm/hello-plain/tags/' | jq '.\"results\"[0][\"name\"]' > .git/last"
+        script {
+             tag2= readFile('.git/last').trim()
       }
-         sh "echo ${tag2}"
+         sh "echo Last image tag ${tag2}"
      }
     }
     stage('Build and push image with Container Builder') {
